@@ -12,7 +12,9 @@ const styles = StyleSheet.create({
     // Flexoptions
     columnContainer: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        flexGrow: 1,
+        flex: 1
     },
     rowContainer: {
         display: 'flex',
@@ -28,7 +30,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     rowContent: {
-        marginTop: 10
+        marginTop: 5,
+        overflow: 'hidden'
     },
     // Text styling
     primaryText: {
@@ -39,18 +42,23 @@ const styles = StyleSheet.create({
     secondaryText: {
         fontSize: theme.fontSizes.body,
         fontWeight: theme.fontWeights.normal,
-        color: theme.colors.textSecondary,
+        color: theme.colors.textSecondary
     },
     description: {
-        minWidth: '70%',
-        maxWidth: '85%'
+        flexGrow: 1,
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch'
     },
-    language: {
+    languageInner: {
+        color: theme.colors.textAppbar
+    },
+    languageOuter: {
         backgroundColor: theme.colors.primary,
-        color: theme.colors.textAppbar,
-        width: 'fit-content',
-        padding: 5,
-        borderRadius: 2
+        alignSelf: 'flex-start',
+        borderWidth: 5,
+        borderColor: theme.colors.primary,
+        borderRadius: 5
     }
 });
 
@@ -60,9 +68,11 @@ const RepositoryItem = ({ repoData }) => (
             <AvatarImage imageUrl={repoData.ownerAvatarUrl} />
             <View style={styles.columnContainer}>
                 <Text style={[styles.primaryText, styles.rowContent]}>{repoData.fullName}</Text>
-                <Text style={[styles.secondaryText, styles.description, styles.rowContent]}>{repoData.description}</Text>
-                <View style={styles.rowContent}>
-                    <Text style={styles.language}>{repoData.language}</Text>
+                <View style={[styles.rowContent, styles.description]}>
+                    <Text style={[styles.secondaryText, styles.rowContent]}>{repoData.description}</Text>
+                </View>
+                <View style={[styles.rowContent, styles.languageOuter]}>
+                    <Text style={styles.languageInner}>{repoData.language}</Text>
                 </View>
             </View>
         </View>
