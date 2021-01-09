@@ -3,9 +3,22 @@ import Constants from 'expo-constants'
 
 const serverUri = Constants.manifest.extra.apolloUri
 
-const createApolloClient = () => {
-  const client = new ApolloClient({ uri: serverUri });
-  return client;
+const createApolloClient = (authStorage) => {
+  return new ApolloClient({
+    request: async (operation) => {
+      try {
+        const accessToken = await authStorage.getAccessToken();
+        operation.setContext({
+          headers: {
+            authorization: accessToken ? `Bearer ${accessToken}` : '',
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    uri: serverUri
+  });
 };
 
 export default createApolloClient;

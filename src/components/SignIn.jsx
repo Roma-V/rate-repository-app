@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, TouchableWithoutFeedback, Alert, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { useHistory } from "react-router-native";
+import { useApolloClient } from '@apollo/react-hooks';
 
 import FormikTextInput from './FormikTextInput';
 import Text from './Text';
-import theme from '../theme'
+import theme from '../theme';
+import useSignIn from '../hooks/useSignIn';
+import AuthStorageContext from '../contexts/AuthStorageContext';
 
 const styles = StyleSheet.create({
     // Flexoptions
@@ -47,8 +51,30 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
-    const onSubmit = values => {
-        console.log(values);
+    const storage = React.useContext(AuthStorageContext);
+    const client = useApolloClient();
+    const [signIn] = useSignIn();
+    const history = useHistory();
+
+    const onSubmit = async (values) => {
+        const { username, password } = values;
+    
+        try {
+          const { data } = await signIn({ username, password });
+          await storage.setAccessToken(data.authorize.accessToken);
+          client.resetStore();
+          history.push("/");
+        } catch (e) {
+          Alert.alert(
+            "Failed authorization",
+            e.message,
+            [
+              { text: "OK" }
+            ],
+            { cancelable: false }
+          );
+      
+        }
     };
 
     return (
