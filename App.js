@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { NativeRouter } from 'react-router-native';
 import { ApolloProvider } from '@apollo/react-hooks'
+import Constants from 'expo-constants'
 
 import Main from './src/components/Main';
 import createApolloClient from './src/utils/apolloClient'
@@ -9,8 +10,8 @@ import createApolloClient from './src/utils/apolloClient'
 const client = createApolloClient()
 
 export default function App() {
-  
   console.log('App started');
+
   return (
     <NativeRouter>
       <ApolloProvider client={client}>
