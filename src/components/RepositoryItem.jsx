@@ -67,37 +67,43 @@ const RepositoryItem = ({ repoData }) => (
         <View style={[styles.rowContainer, styles.gatherItemsAtStart]} >
             <AvatarImage imageUrl={repoData.ownerAvatarUrl} />
             <View style={styles.columnContainer}>
-                <Text style={[styles.primaryText, styles.rowContent]}>{repoData.fullName}</Text>
+                <Text style={[styles.primaryText, styles.rowContent]} testID="fullName">
+                    {repoData.fullName}
+                </Text>
                 <View style={[styles.rowContent, styles.description]}>
-                    <Text style={[styles.secondaryText, styles.rowContent]}>{repoData.description}</Text>
+                    <Text style={[styles.secondaryText, styles.rowContent]} testID="description">
+                        {repoData.description}
+                    </Text>
                 </View>
                 <View style={[styles.rowContent, styles.languageOuter]}>
-                    <Text style={styles.languageInner}>{repoData.language}</Text>
+                    <Text style={styles.languageInner} testID="language">
+                        {repoData.language}
+                    </Text>
                 </View>
             </View>
         </View>
         <View style={[styles.rowContainer, styles.spreadItems, styles.rowContent]} >
-            <BottomItem name='Forks' value={repoData.forksCount} />
-            <BottomItem name='Stars' value={repoData.stargazersCount} />
-            <BottomItem name='Rating' value={repoData.ratingAverage} />
-            <BottomItem name='Reviews' value={repoData.reviewCount} />
+            <BottomItem name='Forks' value={repoData.forksCount} testID="forksCount" />
+            <BottomItem name='Stars' value={repoData.stargazersCount} testID="stargazersCount" />
+            <BottomItem name='Rating' value={repoData.ratingAverage} testID="ratingAverage" />
+            <BottomItem name='Reviews' value={repoData.reviewCount} testID="reviewCount" />
         </View>
     </View>
 );
 
-const BottomItem = ({ name, value }) => {
-    function convertLargeNumbers(number) {
-        if (typeof number !== 'number') return number;
-        if (number < 1000) return number;
-        else return (number / 1000).toFixed(1).toString() + 'k'
-    }
+const BottomItem = ({ name, value, testID }) => (
+    <View style={[styles.columnContainer, styles.alignItemsToCenter]}>
+        <Text style={styles.primaryText} testID={testID}>
+            {convertLargeNumbers(value)}
+        </Text>
+        <Text style={styles.secondaryText}>{name}</Text>
+    </View>
+);
 
-    return (
-        <View style={[styles.columnContainer, styles.alignItemsToCenter]} >
-            <Text style={styles.primaryText}>{convertLargeNumbers(value)}</Text>
-            <Text style={styles.secondaryText}>{name}</Text>
-        </View>
-    )
-};
+export function convertLargeNumbers(number) {
+    if (typeof number !== 'number') return number;
+    if (number < 1000) return number;
+    else return (number / 1000).toFixed(1).toString() + 'k'
+}
 
 export default RepositoryItem;
