@@ -67,11 +67,11 @@ const RepositoryItem = ({ repoData }) => (
         <View style={[styles.rowContainer, styles.gatherItemsAtStart]} >
             <AvatarImage imageUrl={repoData.ownerAvatarUrl} />
             <View style={styles.columnContainer}>
-                <Text style={[styles.primaryText, styles.rowContent]} testID="fullName">
+                <Text style={[styles.rowContent, styles.primaryText]} testID="fullName">
                     {repoData.fullName}
                 </Text>
                 <View style={[styles.rowContent, styles.description]}>
-                    <Text style={[styles.secondaryText, styles.rowContent]} testID="description">
+                    <Text style={styles.secondaryText} testID="description">
                         {repoData.description}
                     </Text>
                 </View>

@@ -7,6 +7,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 
 import FormikTextInput from './FormikTextInput';
 import Text from './Text';
+import Button from './Button'
 import theme from '../theme';
 import useSignIn from '../hooks/useSignIn';
 import AuthStorageContext from '../contexts/AuthStorageContext';
@@ -105,9 +106,15 @@ const SignInForm = ({ onSubmit }) => (
       style={[styles.contents]}
       testID="passwordField"
     />
-    <TouchableWithoutFeedback onPress={onSubmit} testID="submitButton">
+    <Button
+      text='Sign in'
+      onPress={onSubmit} 
+      testID="submitButton"
+      style={styles.contents}
+    />
+    {/* <TouchableWithoutFeedback onPress={onSubmit} testID="submitButton">
       <Text style={[styles.contents, styles.button]}>Sign in</Text>
-    </TouchableWithoutFeedback>
+    </TouchableWithoutFeedback> */}
   </View>
 );
 

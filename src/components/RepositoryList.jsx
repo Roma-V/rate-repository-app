@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { useHistory } from 'react-router-native'
+import { FlatList, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Link, useHistory } from 'react-router-native'
 
 import RepositoryItem from './RepositoryItem'
 import Text from './Text'
@@ -23,9 +23,8 @@ const RepositoryList = () => {
     const { repositories, loading } = useRepositories();
     const history = useHistory()
 
-    function choseRepo() {
-        console.log('chosen');
-        // history.push(`/repo/${id}`);
+    function choseRepo(id) {
+        history.push(`/repo/${id}`);
     }
 
     if (loading) return <View><Text>Loading...</Text></View>
@@ -42,9 +41,9 @@ export const RepositoryListContainer = ({ repositories, choseRepo }) => {
         : [];
 
     const renderItem = ({ item }) => (
-        <TouchableWithoutFeedback onPress={choseRepo}>
+        <TouchableOpacity onPress={() => choseRepo(item.id)}>
             <RepositoryItem repoData={item} />
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
     );
 
     return (

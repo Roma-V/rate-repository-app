@@ -8,7 +8,10 @@ const useRepositories = () => {
         error,
         refetch, 
         data
-    } = useQuery(GET_REPOSITORIES);
+    } = useQuery(
+        GET_REPOSITORIES, 
+        { fetchPolicy: "cache-and-network" }
+        );
     const repositories = data ? data.repositories : null;
 
     // const [repositories, setRepositories] = useState();
