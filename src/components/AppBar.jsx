@@ -68,11 +68,18 @@ const User = () => {
     );
   else
     return (
-      <Link to="/signin">
-        <Text style={styles.text}>
-          Sign in
-        </Text>
-      </Link>
+      <>
+        <Link to="/signin">
+          <Text style={styles.text}>
+            Sign in
+          </Text>
+        </Link>
+        <Link to="/signup">
+          <Text style={styles.text}>
+            Sign up
+          </Text>
+        </Link>
+      </>
     );
 };
 

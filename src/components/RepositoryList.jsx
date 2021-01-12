@@ -1,7 +1,8 @@
 import React from 'react';
 import { FlatList, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Link, useHistory } from 'react-router-native'
+import { useHistory } from 'react-router-native'
 
+import RepositorySortMenu from './RepositorySortMenu'
 import RepositoryItem from './RepositoryItem'
 import Text from './Text'
 import theme from '../theme'
@@ -49,6 +50,7 @@ export const RepositoryListContainer = ({ repositories, choseRepo }) => {
     return (
         <FlatList
             data={repositoryNodes}
+            ListHeaderComponent={RepositorySortMenu}
             ItemSeparatorComponent={ItemSeparator}
             renderItem={renderItem}
             keyExtractor={item => item.id}

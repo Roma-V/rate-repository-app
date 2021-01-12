@@ -9,6 +9,7 @@ import FormikTextInput from './FormikTextInput';
 import Button from './Button'
 import theme from '../theme';
 import useSignIn from '../hooks/useSignIn';
+import useCreateUser from '../hooks/useCreateUser'
 import AuthStorageContext from '../contexts/AuthStorageContext';
 
 const styles = StyleSheet.create({
@@ -37,34 +38,45 @@ const styles = StyleSheet.create({
 const initialValues = {
   username: '',
   password: '',
+  passwordConfirmation: ''
 };
 
 const validationSchema = yup.object().shape({
   username: yup
     .string()
+    .min(1, 'Username must be at least 1 symbols long')
+    .max(30, 'Username must be at most 30 symbols long')
     .required('Username is required'),
   password: yup
     .string()
+    .min(5, 'Password must be at least 5 symbols long')
+    .max(50, 'Password must be at most 50 symbols long')
     .required('Password is required'),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Should match password')
+    .required('Password confirm is required')
 });
 
-const SignIn = () => {
+const SignUp = () => {
   const storage = React.useContext(AuthStorageContext);
   const client = useApolloClient();
   const [signIn] = useSignIn();
+  const [signUp] = useCreateUser();
   const history = useHistory();
 
   const onSubmit = async (values) => {
     const { username, password } = values;
 
     try {
+      await signUp({ username, password });
       const { data } = await signIn({ username, password });
       await storage.setAccessToken(data.authorize.accessToken);
       await client.resetStore();
       history.push("/");
     } catch (e) {
       Alert.alert(
-        "Failed authorization",
+        "Failed",
         e.message,
         [
           { text: "OK" }
@@ -75,20 +87,20 @@ const SignIn = () => {
     }
   };
 
-  return <SignInContainer onSubmit={onSubmit} />;
+  return <SignUpContainer onSubmit={onSubmit} />;
 };
 
-export const SignInContainer = ({ onSubmit }) => (
+export const SignUpContainer = ({ onSubmit }) => (
   <Formik
     initialValues={initialValues}
     onSubmit={onSubmit}
     validationSchema={validationSchema}
   >
-    {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+    {({ handleSubmit }) => <SignUpForm onSubmit={handleSubmit} />}
   </Formik>
 );
 
-const SignInForm = ({ onSubmit }) => (
+const SignUpForm = ({ onSubmit }) => (
   <View style={styles.columnContainer}>
     <FormikTextInput
       name="username"
@@ -103,8 +115,15 @@ const SignInForm = ({ onSubmit }) => (
       style={[styles.contents]}
       testID="passwordField"
     />
+    <FormikTextInput
+      name="passwordConfirmation"
+      placeholder="confirm password"
+      secureTextEntry
+      style={[styles.contents]}
+      testID="passwordConfirmationField"
+    />
     <Button
-      text='Sign in'
+      text='Sign up'
       onPress={onSubmit} 
       testID="submitButton"
       style={styles.contents}
@@ -112,4 +131,4 @@ const SignInForm = ({ onSubmit }) => (
   </View>
 );
 
-export default SignIn;
+export default SignUp;
