@@ -16,9 +16,11 @@ const styles = StyleSheet.create({
 });
 
 const Button = ({ text, onPress, testID, style }) => (
-    <TouchableOpacity onPress={onPress} testID={testID}>
-        <Text style={[style, styles.button]}>{text}</Text>
-    </TouchableOpacity>
+  <TouchableOpacity onPress={onPress}>
+      <Text style={[style, styles.button]} testID={testID}>
+        {text}
+      </Text>
+  </TouchableOpacity>
 );
 
 export default Button;

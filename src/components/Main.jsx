@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Link, Route, Switch, Redirect } from 'react-router-native';
+import { StyleSheet, View } from 'react-native';
+import { Route, Switch } from 'react-router-native';
 
 import AppBar from './AppBar'
 import RepositoryList from './RepositoryList'
+import CreateReview from './CreateReview'
 import RepositoryDetails from './RepositoryDetails'
 import SignIn from './SignIn'
 
@@ -20,6 +21,7 @@ const Main = () => {
       <AppBar />
       <Switch>
         <Route exact path="/" component={RepositoryList} />
+        <Route exact path="/review/" component={CreateReview} />
         <Route exact path="/repo/:id" component={RepositoryDetails} />
         <Route path="/signin" exact component={SignIn} />
       </Switch>

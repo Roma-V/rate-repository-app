@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import { Link } from 'react-router-native';
+import { Link, useHistory } from 'react-router-native';
 import { useApolloClient } from '@apollo/react-hooks';
 
 // import Text from './Text';
@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.backgroundAppbar,
     flexGrow: 0,
     flexShrink: 0
+  },
+  userContainer: {
+    display: 'flex',
+    flexDirection: 'row'
   },
   text: {
     margin: 20,
@@ -41,17 +45,26 @@ const User = () => {
   const storage = React.useContext(AuthStorageContext);
   const client = useApolloClient();
   const user = useAuthorization();
+  const history = useHistory();
 
   async function logOut() {
     await storage.removeAccessToken();
-    client.resetStore();
+    await client.resetStore();
+    history.push('/');
   }
   
   if (user)
     return (
-      <TouchableOpacity onPress={logOut}>
-        <Text style={styles.text}>{user} signed in</Text>
-      </TouchableOpacity>
+      <>
+        <Link to="/review/" >
+          <Text style={styles.text}>
+            Create a review
+          </Text>
+        </Link>
+        <TouchableOpacity onPress={logOut}>
+          <Text style={styles.text}>{user} signed in</Text>
+        </TouchableOpacity>
+      </>
     );
   else
     return (

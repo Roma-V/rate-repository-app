@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback, Alert, StyleSheet } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useHistory } from "react-router-native";
 import { useApolloClient } from '@apollo/react-hooks';
 
 import FormikTextInput from './FormikTextInput';
-import Text from './Text';
 import Button from './Button'
 import theme from '../theme';
 import useSignIn from '../hooks/useSignIn';
@@ -58,24 +57,24 @@ const SignIn = () => {
   const history = useHistory();
 
   const onSubmit = async (values) => {
-      const { username, password } = values;
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      await storage.setAccessToken(data.authorize.accessToken);
+      await client.resetStore();
+      history.push("/");
+    } catch (e) {
+      Alert.alert(
+        "Failed authorization",
+        e.message,
+        [
+          { text: "OK" }
+        ],
+        { cancelable: false }
+      );
   
-      try {
-        const { data } = await signIn({ username, password });
-        await storage.setAccessToken(data.authorize.accessToken);
-        client.resetStore();
-        history.push("/");
-      } catch (e) {
-        Alert.alert(
-          "Failed authorization",
-          e.message,
-          [
-            { text: "OK" }
-          ],
-          { cancelable: false }
-        );
-    
-      }
+    }
   };
 
   return <SignInContainer onSubmit={onSubmit} />;
@@ -112,9 +111,6 @@ const SignInForm = ({ onSubmit }) => (
       testID="submitButton"
       style={styles.contents}
     />
-    {/* <TouchableWithoutFeedback onPress={onSubmit} testID="submitButton">
-      <Text style={[styles.contents, styles.button]}>Sign in</Text>
-    </TouchableWithoutFeedback> */}
   </View>
 );
 
