@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import theme from '../theme'
 
 const style = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
+        backgroundColor: theme.colors.backgroundList,
+        margin: 0,
+        padding: 10
     },
     scrollContainer: {
         flex: 1,
@@ -36,44 +39,60 @@ const style = StyleSheet.create({
       color: 'black',
       paddingRight: 30, // to ensure the text is never behind the icon
     },
+    filter: {
+        marginBottom: 5,
+        color: theme.colors.textPrimary,
+        backgroundColor: theme.colors.backgroundItem,
+        shadowColor: theme.colors.textPrimary,
+        shadowOpacity: 50,
+        shadowRadius: 3,
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        borderRadius: 5,
+        padding: 10
+    }
   });
 
-const RepositorySortMenu = () => {
+export const RepoSelectOptions = Object.freeze({
+    latest: 'latest', 
+    highestRated: 'highestRated',
+    lowestRated: 'lowestRated'
+});
+
+const RepositorySortMenu = ({ onSelect, filter, onFilter }) => {
     return (
-        <RNPickerSelect
-            style={style}
-            onValueChange={(value) => console.log(value)}
-            placeholder={{ label: 'Order by', value: 'orderby' }}
-            items={[
-                { label: 'Football', value: 'football' },
-                { label: 'Baseball', value: 'baseball' },
-                { label: 'Hockey', value: 'hockey' },
-            ]}
-        />
+        <View style={style.container}>
+            <TextInput
+                style={style.filter}
+                value={filter}
+                onChangeText={onFilter}
+            />
+            <RNPickerSelect
+                style={style}
+                onValueChange={onSelect}
+                placeholder={{ 
+                    label: 'Select item', 
+                    value: 'placeholder' 
+                }}
+                items={[
+                    { 
+                        label: 'Latest repositories', 
+                        value: RepoSelectOptions.latest 
+                    },
+                    { 
+                        label: 'Highest rated repositories', 
+                        value: RepoSelectOptions.highestRated
+                    },
+                    { 
+                        label: 'Lowest rated repositories', 
+                        value: RepoSelectOptions.lowestRated
+                    },
+                ]}
+            />
+        </View>
     );
 };
-
-// const RepositorySortMenu = () => {
-//   const [visible, setVisible] = React.useState(false);
-
-//   const openMenu = () => setVisible(true);
-//   const closeMenu = () => setVisible(false);
-
-//   return (
-//     <Provider>
-//       <View style={styles.main}>
-//         <Menu
-//           visible={visible}
-//           onDismiss={closeMenu}
-//           anchor={<Button onPress={openMenu}>Show menu</Button>}>
-//           <Menu.Item onPress={() => console.log('item1')} title="Item 1" />
-//           <Menu.Item onPress={() => console.log('item2')} title="Item 2" />
-//           <Divider />
-//           <Menu.Item onPress={() => console.log('item3')} title="Item 3" />
-//         </Menu>
-//       </View>
-//     </Provider>
-//   );
-// };
 
 export default RepositorySortMenu;

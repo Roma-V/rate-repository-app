@@ -1,15 +1,17 @@
 import { gql } from 'apollo-boost';
 
-import { OrderDirection, AllRepositoriesOrderBy } from './types'
+// import { OrderDirection, AllRepositoriesOrderBy } from './types'
 
 export const GET_REPOSITORIES = gql`
     query GetRepos(
         $orderDirection: OrderDirection,
-        $orderBy: AllRepositoriesOrderBy
+        $orderBy: AllRepositoriesOrderBy,
+        $searchKeyword: String
         ) {
         repositories(
             orderDirection: $orderDirection
-            orderBy: $orderBy
+            orderBy: $orderBy,
+            searchKeyword: $searchKeyword
         ) {
             edges{
                 node {

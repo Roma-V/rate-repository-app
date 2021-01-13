@@ -1,15 +1,9 @@
-import { gql } from 'apollo-boost';
+export const OrderDirection = Object.freeze({
+    ASC: "ASC", 
+    DESC: "DESC"
+});
 
-export const OrderDirection = gql`
-    enum OrderDirection {
-        ASC
-        DESC
-    }
-`;
-
-export const AllRepositoriesOrderBy = gql`
-    enum AllRepositoriesOrderBy {
-        CREATED_AT
-        RATING_AVERAGE
-    }
-`;
+export const AllRepositoriesOrderBy = Object.freeze({
+    CREATED_AT: "CREATED_AT", 
+    RATING_AVERAGE: "RATING_AVERAGE"
+});

@@ -126,7 +126,8 @@ const CreateReviewForm = ({ onSubmit }) => (
     <FormikTextInput
       name="text"
       placeholder="Review"
-      // multiline
+      multiline
+      numberOfLines={4}
       style={[styles.contents]}
       testID="reviewField"
     />

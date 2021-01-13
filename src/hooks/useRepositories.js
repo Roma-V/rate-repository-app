@@ -1,8 +1,12 @@
 import { useQuery } from '@apollo/react-hooks';
 
 import { GET_REPOSITORIES } from '../graphql/queries'
+import { OrderDirection, AllRepositoriesOrderBy} from '../graphql/types'
 
-const useRepositories = () => {
+const useRepositories = (
+    orderBy=AllRepositoriesOrderBy.CREATED_AT,
+    orderDirection=OrderDirection.DESC,
+    searchKeyword="ze") => {
     const { 
         loading,
         error,
@@ -10,27 +14,16 @@ const useRepositories = () => {
         data
     } = useQuery(
         GET_REPOSITORIES, 
-        { fetchPolicy: "cache-and-network" }
+        { 
+            variables: {
+                orderBy,
+                orderDirection,
+                searchKeyword
+            },
+            fetchPolicy: "cache-and-network"
+        }
         );
     const repositories = data ? data.repositories : null;
-
-    // const [repositories, setRepositories] = useState();
-    // const [loading, setLoading] = useState(false);
-
-    // const fetchRepositories = async () => {
-    //     setLoading(true);
-
-    //     // Replace the IP address part with your own IP address!
-    //     const response = await fetch('http://localhost:5000/api/repositories');
-    //     const json = await response.json();
-
-    //     setLoading(false);
-    //     setRepositories(json);
-    // };
-
-    // useEffect(() => {
-    //     fetchRepositories();
-    // }, []);
 
     if (error) console.log('hook error', error);
 
