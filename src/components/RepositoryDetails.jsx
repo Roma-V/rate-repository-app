@@ -1,10 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-native'
-import { View, FlatList, StyleSheet } from 'react-native';
+import { useParams } from 'react-router-native';
+import { View, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
 
 import RepositoryItem from './RepositoryItem';
-import ReviewItem from './ReviewItem';
+import ReviewList from './ReviewList';
 import Text from './Text';
 import Button from './Button';
 import theme from '../theme';
@@ -27,8 +27,12 @@ const styles = StyleSheet.create({
 
 const RepositoryDetails = () => {
     const { id } = useParams();
-    const { repository, reviews, loading } = useRepository(id);
+    const { repository, reviews, loading, fetchMore } = useRepository(id);
     
+    function onEndReach() {
+        fetchMore();
+    }
+
     function openGithub() {
         Linking.openURL(repository.url);
     };
@@ -36,19 +40,18 @@ const RepositoryDetails = () => {
     if (loading) return <Text>...</Text>
 
     return (
-    <View style={styles.main}>
-        <FlatList
-            data={reviews}
-            keyExtractor={item => item.id}
-            ListHeaderComponent={() => <RepositoryInfo
+    <ReviewList
+        style={styles.main}
+        header={
+            <RepositoryInfo
                 repoData={repository} 
                 urlHandler={openGithub}
-            />}
-            renderItem={({ item }) => <ReviewItem
-                item={item}
-            />}
-        />
-    </View>
+            />
+        }
+        reviews={reviews}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
+    />
     );
 };
 

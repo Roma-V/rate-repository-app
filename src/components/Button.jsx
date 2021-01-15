@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
 const Button = ({ text, onPress, testID, style }) => (
   <TouchableOpacity onPress={onPress}>
-      <Text style={[style, styles.button]} testID={testID}>
+      <Text style={[styles.button, style]} testID={testID}>
         {text}
       </Text>
   </TouchableOpacity>

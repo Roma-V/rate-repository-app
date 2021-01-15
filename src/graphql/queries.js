@@ -4,11 +4,15 @@ import { gql } from 'apollo-boost';
 
 export const GET_REPOSITORIES = gql`
     query GetRepos(
+        $after: String
+        $first: Int
         $orderDirection: OrderDirection,
         $orderBy: AllRepositoriesOrderBy,
         $searchKeyword: String
         ) {
         repositories(
+            after: $after,
+            first: $first,
             orderDirection: $orderDirection
             orderBy: $orderBy,
             searchKeyword: $searchKeyword
@@ -25,13 +29,20 @@ export const GET_REPOSITORIES = gql`
                     ratingAverage,
                     reviewCount
                 }
+                cursor
+            }
+            pageInfo {
+                endCursor
+                startCursor
+                totalCount
+                hasNextPage
             }
         }
     }
 `;
 
 export const GET_REPOSITORY = gql`
-    query GetRepo($id: ID!) {
+    query GetRepo($id: ID!, $first: Int, $after: String) {
         repository(id: $id) {
             id,
             ownerAvatarUrl,
@@ -43,7 +54,7 @@ export const GET_REPOSITORY = gql`
             ratingAverage,
             reviewCount,
             url,
-            reviews {
+            reviews(first: $first, after: $after) {
                 edges {
                     node {
                         id
@@ -55,6 +66,13 @@ export const GET_REPOSITORY = gql`
                             username
                         }
                     }
+                    cursor
+                }
+                pageInfo {
+                    endCursor
+                    startCursor
+                    totalCount
+                    hasNextPage
                 }
             }
         }
@@ -62,9 +80,33 @@ export const GET_REPOSITORY = gql`
 `;
 
 export const AUTHORIZED_USER = gql`
-    query {
+    query getAuthorizedUser($includeReviews: Boolean = false) {
         authorizedUser {
             username
+            reviews @include(if: $includeReviews) {
+                edges {
+                    node {
+                        id
+                        text
+                        rating
+                        createdAt
+                        repository {
+                            id
+                        }
+                        user {
+                            id
+                            username
+                        }
+                    }
+                    cursor
+                }
+                pageInfo {
+                    endCursor
+                    startCursor
+                    totalCount
+                    hasNextPage
+                }
+              }
         }
     }
 `;

@@ -27,7 +27,9 @@ const RepositoryList = () => {
     const [filterValue] = useDebounce(filter, 1000);
     const [orderBy, setOrderBy] = useState(AllRepositoriesOrderBy.CREATED_AT);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
-    const { repositories, loading } = useRepositories(orderBy, orderDirection, filterValue);
+    const { repositories, loading, fetchMore } = useRepositories(
+        4, orderBy, orderDirection, filterValue
+        );
     const history = useHistory()
 
     const repositoryNodes = repositories && repositories.edges
@@ -62,6 +64,10 @@ const RepositoryList = () => {
         }
     }
 
+    function onEndReach() {
+        fetchMore();
+    }
+
     if (loading) return <View><Text>Loading...</Text></View>
   
     return <RepositoryListContainer
@@ -70,6 +76,7 @@ const RepositoryList = () => {
         selectOrder={selectOrder}
         filter={filter}
         onFilter={onFilter}
+        onEndReach={onEndReach}
         />;
 };
 
@@ -95,7 +102,7 @@ export class RepositoryListContainer extends React.Component {
     )};
   
     render() {
-        const { repositories } = this.props;
+        const { repositories, onEndReach } = this.props;
         return (
             <FlatList
                 data={repositories}
@@ -104,6 +111,8 @@ export class RepositoryListContainer extends React.Component {
                 renderItem={this.renderItem}
                 keyExtractor={item => item.id}
                 style={styles.main}
+                onEndReached={onEndReach}
+                onEndReachedThreshold={0.5}
             />
         );
         }

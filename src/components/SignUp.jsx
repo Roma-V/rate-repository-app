@@ -83,7 +83,6 @@ const SignUp = () => {
         ],
         { cancelable: false }
       );
-  
     }
   };
 

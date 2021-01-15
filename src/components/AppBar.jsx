@@ -44,7 +44,7 @@ const AppBar = () => {
 const User = () => {
   const storage = React.useContext(AuthStorageContext);
   const client = useApolloClient();
-  const user = useAuthorization();
+  const { user } = useAuthorization();
   const history = useHistory();
 
   async function logOut() {
@@ -59,6 +59,11 @@ const User = () => {
         <Link to="/review/" >
           <Text style={styles.text}>
             Create a review
+          </Text>
+        </Link>
+        <Link to="/myreviews/" >
+          <Text style={styles.text}>
+            My reviews
           </Text>
         </Link>
         <TouchableOpacity onPress={logOut}>

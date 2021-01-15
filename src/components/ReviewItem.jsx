@@ -1,6 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Text from './Text'
+import { View, Alert, StyleSheet } from 'react-native';
+import { useHistory } from 'react-router-native'
+
+import Text from './Text';
+import Button from './Button';
 import theme from '../theme';
 
 const styles = StyleSheet.create({
@@ -12,8 +15,14 @@ const styles = StyleSheet.create({
     // Flexoptions
     rowContainer: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row'
+    },
+    alignStart: {
         justifyContent: 'flex-start'
+    },
+    alignCenter: {
+        justifyContent: 'space-evenly',
+        marginTop: 10
     },
     columnContainer: {
         display: 'flex',
@@ -37,6 +46,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
         overflow: 'hidden'
     },
+    button: {
+        flex: 1,
+        flexGrow: 1,
+    },
+    viewButton: {
+    },
+    deleteButton: {
+        borderColor: theme.colors.secondary,
+        backgroundColor: theme.colors.secondary,
+    },
     // Text styling
     nameText: {
       fontSize: theme.fontSizes.subheading,
@@ -58,9 +77,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReviewItem = ({ item }) => (
+const ReviewItem = ({ item, buttons }) => (
     <View style={[styles.columnContainer, styles.main]}>
-        <View style={[styles.rowContainer]}>
+        <View style={[styles.rowContainer, styles.alignStart]}>
             <View style={styles.rating}>
                 <Text style={styles.ratingText} testID="reviewRating">
                     {item.rating}
@@ -80,8 +99,54 @@ const ReviewItem = ({ item }) => (
                 </View>
             </View>
         </View>
+        {
+            buttons && buttons.show
+                ? <Buttons item={item} onDelete={buttons.onDelete} />
+                : null
+        }
     </View>
-    
 );
+
+const Buttons = ({ item, onDelete }) => {
+    const history = useHistory();
+
+    function viewRepo() {
+        history.push(`/repo/${item.repository.id}`);
+    }
+
+    function deleteReviewHandler() {
+        Alert.alert(
+            "Confirm deletion",
+            null,
+            [
+                { 
+                    text: "OK", 
+                    style: "destructive",
+                    onPress: () => onDelete(item.id)
+                },
+                {
+                    text: "Cancel", 
+                    style: "cancel",
+                    onPress: () => console.log('canlceled deletion')
+                }
+            ],
+            { cancelable: true }
+        );
+    }
+
+    return(
+    <View style={[styles.rowContainer, styles.alignCenter]}>
+        <Button
+            style={[styles.button, styles.viewButton]}
+            text='View repository'
+            onPress={viewRepo}
+        />
+        <Button
+            style={[styles.button, styles.deleteButton]}
+            text='Delete review'
+            onPress={deleteReviewHandler}
+        />
+    </View>
+)};
 
 export default ReviewItem;
